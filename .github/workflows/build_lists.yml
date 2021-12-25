@@ -1,0 +1,29 @@
+name: List builder
+
+on:
+  schedule:
+    # once an hour
+    - cron: "0 * * * *"
+
+jobs:
+  test:
+    name: yeet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: install poetry
+        uses: Gr1N/setup-poetry@v4
+
+      - name: run list syncing
+        run: |
+          poetry install
+          poetry run python main.py
+        env:
+          CONSUMER_KEY: ${{ secrets.CONSUMER_KEY }}
+          CONSUMER_SECRET: ${{ secrets.CONSUMER_SECRET }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.ACCESS_TOKEN_SECRET }}
+          BEARER_TOKEN: ${{ secrets.BEARER_TOKEN }}
