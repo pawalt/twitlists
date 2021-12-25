@@ -7,9 +7,9 @@ on:
     - cron: "0 * * * *"
 
 jobs:
-  test:
-    name: yeet
+  lister:
     runs-on: ubuntu-latest
+    environment: "gh actions"
 
     steps:
       - name: Checkout code
