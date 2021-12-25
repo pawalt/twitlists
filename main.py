@@ -42,7 +42,7 @@ for l in owned_lists:
         overflow_list_id = l.id
 
 if overflow_list_id == None:
-    raise Exception("could not find list named {OVERFLOW_LIST} for user {USERNAME}")
+    raise Exception(f"could not find list named {OVERFLOW_LIST} for user {USERNAME}")
 
 following_ids = set(map(lambda user: user.id, following))
 for l in owned_lists:
