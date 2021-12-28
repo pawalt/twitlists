@@ -1,11 +1,15 @@
 import tweepy
 import os
 from dotenv import load_dotenv
+from typing import List, Set
 
 USERNAME="peywalt"
 OVERFLOW_LIST="misc"
 
 load_dotenv()
+
+def get_user_ids(users : List[tweepy.User]) -> Set[int]:
+    return set(map(lambda user: user.id, users))
 
 client = tweepy.Client(
     consumer_key=os.environ["CONSUMER_KEY"],
@@ -37,22 +41,37 @@ while True:
 # and am lazy
 owned_lists = client.get_owned_lists(list_user.id, user_auth=True).data
 overflow_list_id = None
+overflow_users = None
 for l in owned_lists:
     if l.name == OVERFLOW_LIST:
         overflow_list_id = l.id
+        overflow_users = client.get_list_members(l.id, user_auth=True).data
 
 if overflow_list_id == None:
-    raise Exception(f"could not find list named {OVERFLOW_LIST} for user {USERNAME}")
+    raise Exception(f"Could not find list named {OVERFLOW_LIST} for user {USERNAME}")
 
-following_ids = set(map(lambda user: user.id, following))
+following_ids = get_user_ids(following)
 for l in owned_lists:
     list_users = client.get_list_members(l.id, user_auth=True).data
-    following_ids = following_ids - set(map(lambda user: user.id, list_users))
+    following_ids = following_ids - get_user_ids(list_users)
 
 # At this point, following_ids should only have user IDs for users who
 # I'm following but do not have in any lists
 
 for user_id in following_ids:
+    user : tweepy.User = client.get_user(id=user_id).data
+    print(f"Adding user {user.username} to list {OVERFLOW_LIST}")
     client.add_list_member(overflow_list_id, user_id)
 
 print(f"Added {len(following_ids)} users to {OVERFLOW_LIST}")
+
+# Now let's remove everyone who we aren't following from overflow
+
+overflow_user_ids = get_user_ids(overflow_users)
+ids_to_remove = overflow_user_ids - get_user_ids(following)
+for user_id in ids_to_remove:
+    user : tweepy.User = client.get_user(id=user_id).data
+    print(f"Removing user {user.username} from list {OVERFLOW_LIST}")
+    client.remove_list_member(overflow_list_id, user_id)
+
+print(f"Removed {len(ids_to_remove)} users from {OVERFLOW_LIST}")

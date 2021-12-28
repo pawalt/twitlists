@@ -6,8 +6,6 @@ You can fix this by using Twitter Lists. Lists are exactly reverse-chronological
 
 To fix this, I wrote a script that takes your username along with an "overflow list". It then takes all your following, set subtracts all your list members from it, and sees what's left over. If there are any users that you follow but aren't in your lists, it adds them to your overflow list. This overflow list effectively becomes your "following list".
 
+The script will also remove anyone you aren't following from your overflow list.
+
 To keep things in sync, I've set up a Github Action on a cron schedule to run once an hour. I think this is actually against Actions TOS so please don't tell GitHub :P
-
-### Unfinished Work
-
-I need to make it so that if I unfollow someone they get removed from my lists as well. Should this removal only happen for the overflow list or for all of them?
