@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: install poetry
-        uses: Gr1N/setup-poetry@v4
+        uses: Gr1N/setup-poetry@v7
 
       - name: run list syncing
         run: |
