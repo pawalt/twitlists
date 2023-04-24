@@ -1,10 +1,5 @@
 name: List builder
 
-on:
-  workflow_dispatch:
-  schedule:
-    # once an hour
-    - cron: "0 * * * *"
 
 jobs:
   lister:
